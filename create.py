@@ -1,0 +1,52 @@
+def ingresar_rompecabezas(piezas, driver):
+    with driver.session() as session:
+        # primero creacion de piezas
+        for pieza in piezas:
+            session.execute_write(crear_pieza, pieza)
+        
+        # luego la creacion de relaciones
+        for pieza in piezas:
+            session.execute_write(crear_relaciones, pieza)
+
+def crear_pieza(tx, pieza):
+    query = """
+    CREATE (p:Pieza {
+        id_num: $id_num,
+        nombre_rompecabezas: $nombre_rompecabezas,
+        faltante: $faltante,
+        material: $material,
+        marca: $marca,
+        tematica: $tematica,
+        forma: $forma
+    })
+    """
+    tx.run(query, 
+           id_num=pieza['id_num'],
+           nombre_rompecabezas=pieza['nombre_rompecabezas'],
+           faltante=pieza['faltante'],
+           material=pieza['material'],
+           marca=pieza['marca'],
+           tematica=pieza['tematica'],
+           forma=pieza['forma'])
+
+def crear_relaciones(tx, pieza):
+    # Mapeo de relaciones a direcciones
+    direcciones = {
+        'rel_izq': 'izquierda',
+        'rel_der': 'derecha',
+        'rel_arriba': 'arriba',
+        'rel_abajo': 'abajo'
+    }
+    
+    for rel_key, direccion in direcciones.items():
+        pieza_destino = pieza[rel_key]
+        if pieza_destino > 0:  # Solo crear relación si hay conexión
+            query = """
+            MATCH (p1:Pieza {id_num: $id_origen})
+            MATCH (p2:Pieza {id_num: $id_destino})
+            CREATE (p1)-[:CONECTADO_A {direccion: $direccion}]->(p2)
+            """
+            tx.run(query, 
+                   id_origen=pieza['id_num'],
+                   id_destino=pieza_destino,
+                   direccion=direccion)
