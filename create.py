@@ -10,15 +10,13 @@ def ingresar_rompecabezas(piezas, driver):
 
 def crear_pieza(tx, pieza):
     query = """
-    CREATE (p:Pieza {
-        id_num: $id_num,
-        nombre_rompecabezas: $nombre_rompecabezas,
-        faltante: $faltante,
-        material: $material,
-        marca: $marca,
-        tematica: $tematica,
-        forma: $forma
-    })
+    MERGE (p:Pieza {id_num: $id_num, nombre_rompecabezas: $nombre_rompecabezas})
+    ON CREATE SET
+        p.faltante = $faltante,
+        p.material = $material,
+        p.marca = $marca,
+        p.tematica = $tematica,
+        p.forma = $forma
     """
     tx.run(query, 
            id_num=pieza['id_num'],
@@ -46,10 +44,10 @@ def crear_relaciones(tx, pieza):
     for rel_key, direccion in direcciones.items():
         pieza_destino = pieza[rel_key]
         if pieza_destino > 0:  # Solo crear relación si hay conexión
-            query = """
+            query = query = """
             MATCH (p1:Pieza {id_num: $id_origen, nombre_rompecabezas: $nombre_puzzle})
             MATCH (p2:Pieza {id_num: $id_destino, nombre_rompecabezas: $nombre_puzzle})
-            CREATE (p1)-[:CONECTADO_A {direccion: $direccion}]->(p2)
+            MERGE (p1)-[:CONECTADO_A {direccion: $direccion}]->(p2)
             """
             tx.run(query, 
                    id_origen=pieza['id_num'],
