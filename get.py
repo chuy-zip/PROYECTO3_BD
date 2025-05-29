@@ -9,7 +9,7 @@ def get_puzzle(puzzle_name: str, driver) -> dict:
     Returns:
         dict: A dictionary containing the pieces of the puzzle.
     """
-    records = driver.execute_query(
+    records, summary, keys = driver.execute_query(
         "MATCH (p:Pieza) WHERE p.nombre_rompecabezas = $p_name RETURN p",
         p_name=puzzle_name,
         database="neo4j"
