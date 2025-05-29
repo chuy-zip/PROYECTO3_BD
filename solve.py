@@ -67,12 +67,3 @@ def armar_rompecabezas(datos: json, pieza_inicio=None):
     print("FIN ----------------------------------------------------------+")
 
 
-# JONSON
-datos_rompecabezas = None
-
-with open('pterodactil_puzzle.json', 'r') as file:
-    datos_rompecabezas = json.load(file)
-
-# como llamar función
-armar_rompecabezas(datos_rompecabezas)  # Para pieza aleatoria
-# armar_rompecabezas(datos_rompecabezas, pieza_inicio=1)  # Para empezar en pieza 1

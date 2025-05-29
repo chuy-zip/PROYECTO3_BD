@@ -84,3 +84,50 @@ def get_piece_relations(puzzle: list, puzzle_name: str, driver) -> list:
     print("Relaciones para cada pieza obtenidas de la base de datos Neo4j.\n")
 
     return puzzle
+
+def seleccionar_rompecabezas(driver):
+    query = """
+    MATCH (p:Pieza)
+    RETURN DISTINCT p.nombre_rompecabezas AS nombre
+    ORDER BY p.nombre_rompecabezas
+    """
+    
+    try:
+        # Ejecutar la consulta
+        records, summary, keys = driver.execute_query(
+            query,
+            database="neo4j"
+        )
+        
+        if not records:
+            print("No se encontraron rompecabezas en la base de datos.")
+            return None
+        
+        # extraer los nombres únicos
+        rompecabezas = [record["nombre"] for record in records]
+        
+        # menu de selección
+        print("\n---- ROMPECABEZAS DISPONIBLES ----")
+        for i, nombre in enumerate(rompecabezas, start=1):
+            print(f"{i}. {nombre}")
+        print("-----------------------------------\n")
+        
+        while True:
+            try:
+                seleccion = input("Ingrese el número del rompecabezas que desea resolver (0 para salir): ")
+                
+                if seleccion == "0":
+                    return None
+                
+                seleccion = int(seleccion)
+                if 1 <= seleccion <= len(rompecabezas):
+                    return rompecabezas[seleccion-1]
+                else:
+                    print(f"Por favor ingrese un número entre 1 y {len(rompecabezas)}.")
+            
+            except ValueError:
+                print("Entrada inválida. Por favor ingrese un número.")
+    
+    except Exception as e:
+        print(f"Error al consultar la base de datos: {e}")
+        return None

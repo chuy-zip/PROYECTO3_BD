@@ -10,8 +10,9 @@
 ######################################################
 
 from connection import get_neo_driver
-from get import get_puzzle
+from get import get_puzzle, seleccionar_rompecabezas
 from create import ingresar_rompecabezas
+from solve import armar_rompecabezas
 import json
 
 driver = get_neo_driver()
@@ -36,9 +37,12 @@ while not salir:
         print(f"Rompecabezas '{piezas[0]['nombre_rompecabezas']}' insertado correctamente con {len(piezas)} piezas.")
     
     if opcion == "2":
-        puzzle_name = input("Ingrese el nombre del puzzle que desea resolver: ").strip()
+        # puzzle_name = input("Ingrese el nombre del puzzle que desea resolver: ").strip()
+        puzzle_name = seleccionar_rompecabezas(driver)
         print(f"Solución del rompecabezas: '{puzzle_name}'.")
         puzzle = get_puzzle(puzzle_name, driver)
+        armar_rompecabezas(puzzle)
+        
 
     if opcion == "3":
         salir = True
