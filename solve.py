@@ -5,11 +5,29 @@ def armar_rompecabezas(datos: json, pieza_inicio=None):
     # id_num -> nodo pieza
     piezas = {p['id_num']: p for p in datos}
     
+    # data del rompecabezas
+    primera_pieza = next(iter(piezas.values()))
+
+    nombre = primera_pieza['nombre_rompecabezas']
+    material = primera_pieza['material']
+    marca = primera_pieza['marca']
+    tematica = primera_pieza['tematica']
+    forma = primera_pieza['forma']
+    
+    # Mostrar información general del rompecabezas
+    print("\n+---- INFORMACIÓN DEL ROMPECABEZAS ----+")
+    print(f"|  Nombre: {nombre}")
+    print(f"|  Material: {material}")
+    print(f"|  Marca: {marca}")
+    print(f"|  Temática: {tematica}")
+    print(f"|  Forma de las piezas: {forma}")
+    print("+--------------------------------------+\n")
+
     # elegir una aleatoria
     if pieza_inicio is None:
         pieza_inicio = random.choice(list(piezas.keys()))
     
-    print(f"INICIO en pieza {pieza_inicio}")
+    print(f"INICIO en pieza #{pieza_inicio} -------------------------------------------+")
     
     # registro de piezas ya visitadas
     visitadas = set()
@@ -40,12 +58,13 @@ def armar_rompecabezas(datos: json, pieza_inicio=None):
                     if piezas[pieza_relacionada]['faltante']:
                         print(f"Pieza faltante id #{pieza_relacionada}")
                     else:
-                        print(f"Conectar pieza {pieza_relacionada} en el lado {direccion} de pieza {pieza_actual}")
+                        print(f"|  Conectar pieza #{pieza_relacionada} en el lado {direccion} de pieza #{pieza_actual}")
                         explorar_conexiones(pieza_relacionada, direccion, pieza_actual)
                 else:
                     print(f"Advertencia: Pieza {pieza_relacionada} referenciada pero no existe en los datos")
     
     explorar_conexiones(pieza_inicio)
+    print("FIN ----------------------------------------------------------+")
 
 
 # JONSON
