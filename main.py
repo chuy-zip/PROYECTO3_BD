@@ -39,8 +39,6 @@ while not salir:
         puzzle_name = input("Ingrese el nombre del puzzle que desea resolver: ").strip()
         print(f"Solución del rompecabezas: '{puzzle_name}'.")
         puzzle = get_puzzle(puzzle_name, driver)
-        for pieza in puzzle:
-            print(pieza, "\n")
 
     if opcion == "3":
         salir = True

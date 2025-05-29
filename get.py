@@ -70,7 +70,7 @@ def get_piece_relations(puzzle: list, puzzle_name: str, driver) -> list:
             relation = record["r"]
             related_piece = record["q"]
 
-            print(f"{piece['id_num']} - {relation['direccion']} -> {related_piece['id_num']}")
+            # print(f"{piece['id_num']} - {relation['direccion']} -> {related_piece['id_num']}") // Debug Print to check piece relations
 
             if relation["direccion"] == "izquierda" and pieza["rel_izq"] == -1:
                 pieza["rel_izq"] = related_piece["id_num"]
